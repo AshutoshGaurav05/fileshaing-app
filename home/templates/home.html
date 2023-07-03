@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block title %} Home {% endblock title %}
+
+{% block body %}
+<div class="text-center">
+
+    <img src="/media/image/undraw.svg" class="img-fluid img-responsive" style="height: 200px;">
+</div>
+
+<input type="file" class="my-pond mt-4" multiple name="filepond" />
+
+<div class="text-center">
+    <button class="btn btn-success" onclick="upload_file()">Upload File</button>
+</div>
+
+<div class="carad mt-3" id="btn" style="display: none">
+    <div class="card-bodqy">
+
+
+        <div class="background">
+            <center>
+                <button onclick="copyClip()" class="clipboard">Click me to copy current Url</button>
+                <p>Have you already clicked?</p>
+            </center>
+        </div>
+
+    </div>
+
+</div>
+<script>
+    // home
+    FilePond.registerPlugin(
+        FilePondPluginImagePreview
+    );
+
+    const pond = FilePond.create(
+        document.querySelector(".my-pond")
+    );
+
+    var url = null;
+
+    function upload_file() {
+        var files = pond.getFiles();
+
+        var formdata = new FormData();
+
+        for (var i = 0; i < files.length; i++) {
+            formdata.append("files", files[i].file);
+        }
+
+        fetch("/handle/", {
+            method: "POST",
+            headers: { "X-CSRFToken": "{{csrf_token}}" },
+            body: formdata,
+        })
+            .then((res) => res.json())
+            .then((result) => {
+                // console.log(result);
+                url = `http://127.0.0.1:8000/download/${result.data.folder}`;
+                document.getElementById("btn").style.display = '';
+            });
+    }
+
+    function copyClip() {
+        //  Copy the text inside the text field
+        navigator.clipboard.writeText(url);
+
+        //  Alert the copied text
+        alert("Copied the text: " + url);
+    }
+</script>
+{% endblock body %}

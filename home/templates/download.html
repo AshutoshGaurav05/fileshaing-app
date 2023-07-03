@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %} Download {% endblock title %}
+
+{% block body %}
+<div class="text-center">
+  <img src="/media/image/download.svg" class="img-fluid img-responsive" style="height: 200px;">
+</div>
+<div class="carad mt-5">
+  <div class="card-bodqy">
+    <div class="background">
+      <center>
+        <a href="/media/zip/{{uid}}.zip" class="clipboard">Download Files</a>
+        <br>
+        <br>
+        <p>Have you already clicked?</p>
+      </center>
+    </div>
+  </div>
+</div>
+</div>
+<script>
+  $(function () {
+    $.fn.filepond.registerPlugin(FilePondPluginImagePreview);
+    $(".my-pond").filepond();
+    $(".my-pond").filepond("allowMultiple", true);
+    $(".my-pond").on("FilePond:addfile", function (e) {
+      console.log("file added event", e);
+    });
+  });
+</script>
+{% endblock body %}
